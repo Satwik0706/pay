@@ -117,11 +117,20 @@ function escapeHtml(str) {
 // Step 1: Open Devotee Details Form Modal
 function openDevoteeModal(serviceId) {
   const service = allServices.find(s => s.id === serviceId);
-  if (!service) return;
+  if (!service) {
+    console.error('Service not found:', serviceId);
+    showToast('Offering details could not be found. Please refresh.', 'error');
+    return;
+  }
 
   const modal = document.getElementById('checkoutModal');
   const modalTitle = document.getElementById('modalTitle');
   const modalBody = document.getElementById('modalBody');
+
+  if (!modal || !modalTitle || !modalBody) {
+    console.error('Checkout modal elements missing from page');
+    return;
+  }
 
   modalTitle.textContent = `Devotee Details • ${service.title}`;
   modalBody.innerHTML = `
@@ -169,6 +178,13 @@ function openDevoteeModal(serviceId) {
   `;
 
   modal.classList.add('active');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    const input = document.getElementById('custName');
+    if (input) input.focus();
+  }, 100);
 }
 
 // Handle Order Creation via Backend
@@ -630,7 +646,12 @@ function fallbackCopy(text) {
 
 // Modal Control
 function closeCheckoutModal() {
-  document.getElementById('checkoutModal').classList.remove('active');
+  const modal = document.getElementById('checkoutModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+  }
+  document.body.style.overflow = '';
   if (orderCountdownInterval) clearInterval(orderCountdownInterval);
   if (statusPollInterval) clearInterval(statusPollInterval);
 }
