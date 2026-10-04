@@ -3,7 +3,7 @@ const QRCode = require('qrcode');
 /**
  * Generate UPI deep link URLs for standard and specific UPI applications
  */
-function buildUpiLinks({ vpa, name, amount, orderId, note, mcc = '8661' }) {
+function buildUpiLinks({ vpa, name, amount, orderId, note, mcc }) {
   const formattedAmount = parseFloat(amount).toFixed(2);
   const cleanNote = (note || `Payment for ${orderId}`).slice(0, 50);
 
@@ -11,35 +11,40 @@ function buildUpiLinks({ vpa, name, amount, orderId, note, mcc = '8661' }) {
   const params = new URLSearchParams({
     pa: vpa,
     pn: name,
-    mc: mcc,
     tr: orderId,
     tn: cleanNote,
     am: formattedAmount,
     cu: 'INR',
   });
 
-  const queryString = params.toString();
+  // Only include mc if specifically configured and not dummy/default
+  if (mcc && mcc !== '8661' && mcc !== 'default') {
+    params.set('mc', mcc);
+  }
+
+  // Ensure RFC 3986 percent-encoding (spaces as %20, not +) for strict UPI app parsers
+  const queryString = params.toString().replace(/\+/g, '%20');
 
   const genericUri = `upi://pay?${queryString}`;
 
   return {
-    // Standard universal UPI protocol (triggers OS intent chooser on mobile: GPay, PhonePe, Paytm, Cred, BHIM)
+    // Standard universal UPI protocol (triggers OS intent chooser on iOS & fallback)
     generic: genericUri,
 
-    // Google Pay: Android Intent targeting package + Tez fallback
-    gpay: `intent://pay?${queryString}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`,
-    gpayScheme: `tez://upi/pay?${queryString}`,
+    // Android Universal Intent (pops native Android bottom sheet for ANY installed UPI app)
+    androidIntent: `intent://upi/pay?${queryString}#Intent;scheme=upi;end;`,
 
-    // PhonePe: Android Intent targeting package + scheme fallback
-    phonepe: `intent://pay?${queryString}#Intent;scheme=upi;package=com.phonepe.app;end`,
-    phonepeScheme: `phonepe://pay?${queryString}`,
+    // Google Pay: Android explicit package intent
+    gpay: `intent://upi/pay?${queryString}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.google.android.apps.nbu.paisa.user;end;`,
 
-    // Paytm: Android Intent targeting package + scheme fallback
-    paytm: `intent://pay?${queryString}#Intent;scheme=upi;package=net.one97.paytm;end`,
-    paytmScheme: `paytmmp://pay?${queryString}`,
+    // PhonePe: Android explicit package intent
+    phonepe: `intent://upi/pay?${queryString}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.phonepe.app;end;`,
 
-    // BHIM direct intent
-    bhim: `intent://pay?${queryString}#Intent;scheme=upi;package=in.org.npci.upiapp;end`,
+    // Paytm: Android explicit package intent
+    paytm: `intent://upi/pay?${queryString}#Intent;scheme=upi;package=net.one97.paytm;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dnet.one97.paytm;end;`,
+
+    // BHIM: Android explicit package intent
+    bhim: `intent://upi/pay?${queryString}#Intent;scheme=upi;package=in.org.npci.upiapp;end;`,
 
     // Raw query params for debugging/inspection
     query: queryString,

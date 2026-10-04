@@ -593,6 +593,27 @@ body {
 }
 
 /* Mobile UPI Instant Apps Buttons */
+.btn-fast-pay {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.3));
+  border: 1px solid var(--accent-gold);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+  cursor: pointer;
+}
+
+.btn-fast-pay:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28), rgba(217, 119, 6, 0.45));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.25);
+}
+
 .upi-app-buttons-label {
   font-size: 12px;
   color: var(--text-dim);

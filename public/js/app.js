@@ -220,6 +220,18 @@ function renderPaymentScreen(order) {
 
   modalTitle.textContent = `UPI Payment • ${order.orderId}`;
 
+  // OS detection for native intent routing
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isMobile = isAndroid || isIOS || window.innerWidth <= 768;
+
+  // On Android, use intent:// scheme; on iOS, use upi:// scheme
+  const primaryUpiUrl = isAndroid ? (order.upiLinks.androidIntent || order.upiLinks.generic) : order.upiLinks.generic;
+  const gpayUrl = isAndroid ? (order.upiLinks.gpay || order.upiLinks.generic) : order.upiLinks.generic;
+  const phonepeUrl = isAndroid ? (order.upiLinks.phonepe || order.upiLinks.generic) : order.upiLinks.generic;
+  const paytmUrl = isAndroid ? (order.upiLinks.paytm || order.upiLinks.generic) : order.upiLinks.generic;
+  const genericUrl = order.upiLinks.generic;
+
   modalBody.innerHTML = `
     <!-- Top Order Summary & Timer -->
     <div class="order-summary-box">
@@ -244,29 +256,41 @@ function renderPaymentScreen(order) {
     </div>
 
     <!-- Mobile Quick Intent App Launchers -->
-    <div class="upi-app-buttons-label">
-      OR 1-Tap Pay on Mobile Phone
-      <div class="desktop-hint-badge">
-        <span>💡</span> Desktop users: Scan QR code above
+    <div class="mobile-pay-section">
+      <!-- 1-Tap Universal Launcher Button -->
+      <a href="${primaryUpiUrl}" class="btn-fast-pay" onclick="handleUpiLinkClick(event, this.href)">
+        <div style="font-size: 22px;">⚡</div>
+        <div style="text-align: left; flex: 1;">
+          <div style="font-size: 14px; font-weight: 700; color: #fff;">Pay ₹${Number(order.amount).toLocaleString('en-IN')} via UPI App</div>
+          <div style="font-size: 11px; color: var(--accent-gold);">Tap to open Google Pay, PhonePe, Paytm, or BHIM directly</div>
+        </div>
+        <div style="font-size: 18px; color: var(--accent-gold);">&rarr;</div>
+      </a>
+
+      <div class="upi-app-buttons-label">
+        <span>Or Choose Specific UPI App</span>
+        <div class="desktop-hint-badge">
+          <span>💡</span> Desktop users: Scan QR code above
+        </div>
       </div>
-    </div>
-    <div class="upi-app-grid">
-      <button type="button" class="btn-upi-app" onclick="handleUpiAppClick(event, 'gpay')">
-        <div class="app-icon gpay">G</div>
-        <span>Google Pay</span>
-      </button>
-      <button type="button" class="btn-upi-app" onclick="handleUpiAppClick(event, 'phonepe')">
-        <div class="app-icon phonepe">पे</div>
-        <span>PhonePe</span>
-      </button>
-      <button type="button" class="btn-upi-app" onclick="handleUpiAppClick(event, 'paytm')">
-        <div class="app-icon paytm">P</div>
-        <span>Paytm</span>
-      </button>
-      <button type="button" class="btn-upi-app" onclick="handleUpiAppClick(event, 'generic')">
-        <div class="app-icon anyupi">UPI</div>
-        <span>Any UPI</span>
-      </button>
+      <div class="upi-app-grid">
+        <a href="${gpayUrl}" class="btn-upi-app" onclick="handleUpiLinkClick(event, this.href)">
+          <div class="app-icon gpay">G</div>
+          <span>Google Pay</span>
+        </a>
+        <a href="${phonepeUrl}" class="btn-upi-app" onclick="handleUpiLinkClick(event, this.href)">
+          <div class="app-icon phonepe">पे</div>
+          <span>PhonePe</span>
+        </a>
+        <a href="${paytmUrl}" class="btn-upi-app" onclick="handleUpiLinkClick(event, this.href)">
+          <div class="app-icon paytm">P</div>
+          <span>Paytm</span>
+        </a>
+        <a href="${genericUrl}" class="btn-upi-app" onclick="handleUpiLinkClick(event, this.href)">
+          <div class="app-icon anyupi">UPI</div>
+          <span>Any UPI</span>
+        </a>
+      </div>
     </div>
 
     <!-- Copy Merchant VPA & Link Section -->
@@ -624,18 +648,15 @@ function isMobileDevice() {
   return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) || (window.innerWidth <= 768);
 }
 
-// Smart UPI App Intent Launcher
-function handleUpiAppClick(event, appType) {
-  if (event) event.preventDefault();
-  if (!currentOrder || !currentOrder.upiLinks) return;
-
-  const isMobile = isMobileDevice();
+// Smart UPI App Intent Handler
+function handleUpiLinkClick(event, href) {
+  const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
   if (!isMobile) {
-    // Devotee is on desktop/PC
-    showToast('📱 UPI apps (GPay, PhonePe, Paytm) only open on mobile phones. Please scan the QR code above with your phone!', 'info');
+    // Desktop user clicked a mobile intent link
+    if (event) event.preventDefault();
+    showToast('📱 UPI apps (GPay, PhonePe, Paytm) only open on mobile phones. On your computer, please scan the QR code above with your phone camera!', 'info');
 
-    // Visual pulse effect on QR Code to guide the user
     const qrContainer = document.getElementById('qrCodeContainer');
     if (qrContainer) {
       qrContainer.classList.remove('qr-highlight-pulse');
@@ -649,27 +670,10 @@ function handleUpiAppClick(event, appType) {
     return;
   }
 
-  // Devotee is on Mobile Device
-  const isAndroid = /Android/i.test(navigator.userAgent);
-  let targetUrl = currentOrder.upiLinks.generic;
-
-  if (appType === 'gpay') {
-    targetUrl = isAndroid ? (currentOrder.upiLinks.gpay || currentOrder.upiLinks.generic) : currentOrder.upiLinks.generic;
-  } else if (appType === 'phonepe') {
-    targetUrl = isAndroid ? (currentOrder.upiLinks.phonepe || currentOrder.upiLinks.generic) : (currentOrder.upiLinks.phonepeScheme || currentOrder.upiLinks.generic);
-  } else if (appType === 'paytm') {
-    targetUrl = isAndroid ? (currentOrder.upiLinks.paytm || currentOrder.upiLinks.generic) : (currentOrder.upiLinks.paytmScheme || currentOrder.upiLinks.generic);
-  } else {
-    targetUrl = currentOrder.upiLinks.generic;
-  }
-
-  // Navigate directly without opening a blank tab
-  window.location.href = targetUrl;
-
-  // Feedback if app did not open
+  // On Mobile: Allow the browser to follow the link natively to trigger the OS intent
   setTimeout(() => {
-    showToast('If your UPI app did not open automatically, please tap "Any UPI" or scan the QR code.', 'info');
-  }, 3000);
+    showToast('Launching UPI app... After completing payment, enter your 12-digit UTR below.', 'info');
+  }, 1000);
 }
 
 // Copy Direct UPI Link
