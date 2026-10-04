@@ -1,0 +1,92 @@
+[
+  {
+    "id": "seva_archana",
+    "title": "Nitya Archana & Sankalpam",
+    "category": "Daily Seva",
+    "description": "Special Archana performed with your family Gotra and Nakshatra names with sacred blessings.",
+    "amount": 151,
+    "active": true,
+    "badge": "Popular",
+    "icon": "🪔",
+    "benefits": [
+      "Personalized Sankalpa Mantra",
+      "Blessed Prasadam Dispatched",
+      "Digital Receipt with Gotram"
+    ]
+  },
+  {
+    "id": "seva_abhishekam",
+    "title": "Rudrabhishekam Maha Seva",
+    "category": "Special Seva",
+    "description": "Elaborate sacred bathing ritual with 11 holy offerings including Panchamrita, Honey, and Chandan.",
+    "amount": 501,
+    "active": true,
+    "badge": "Most Sacred",
+    "icon": "🕉️",
+    "benefits": [
+      "Live Video Stream Access",
+      "Special Silver Coin Prasadam",
+      "Priest Consultation Blessing"
+    ]
+  },
+  {
+    "id": "seva_annadhanam",
+    "title": "Annadanam Seva (Feed 25 Devotees)",
+    "category": "Annadanam",
+    "description": "Sponsor wholesome, delicious vegetarian meals and nourishment for 25 pilgrims and underprivileged devotees.",
+    "amount": 1100,
+    "active": true,
+    "badge": "High Merit",
+    "icon": "🍲",
+    "benefits": [
+      "Annadhanam Certificate of Merit",
+      "Names displayed on Daily Seva Board",
+      "Tax Exemption Receipt"
+    ]
+  },
+  {
+    "id": "seva_kalyanam",
+    "title": "Divya Kalyana Mahotsavam",
+    "category": "Special Seva",
+    "description": "Celestial divine wedding ceremony for harmony, prosperity, and marital bliss.",
+    "amount": 2501,
+    "active": true,
+    "badge": "Grand Seva",
+    "icon": "✨",
+    "benefits": [
+      "Sacred Vastram Prasadam",
+      "Vedic Priest Blessings",
+      "VIP Darshan Pass"
+    ]
+  },
+  {
+    "id": "seva_navagraha",
+    "title": "Navagraha Shanti Homam",
+    "category": "Homa & Yagna",
+    "description": "Vedic fire ceremony invoked to alleviate planetary afflictions, removing obstacles in career and health.",
+    "amount": 1501,
+    "active": true,
+    "badge": "Protective",
+    "icon": "🔥",
+    "benefits": [
+      "Sacred Bhasma & Raksha Sutra",
+      "Individual Homa Sankalpa",
+      "Vedic Astrological Peace"
+    ]
+  },
+  {
+    "id": "seva_vidya",
+    "title": "Saraswati Vidya Daan Seva",
+    "category": "Education & Charity",
+    "description": "Support educational kits, notebooks, and school supplies for children from rural communities.",
+    "amount": 751,
+    "active": true,
+    "badge": "Charity",
+    "icon": "📚",
+    "benefits": [
+      "Student Gratitude Letter",
+      "Direct Community Impact Report",
+      "Donor Wall Acknowledgement"
+    ]
+  }
+]

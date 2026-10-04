@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: seva-upi-payment
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MERCHANT_VPA
+        value: templetrust@upi
+      - key: MERCHANT_NAME
+        value: Sri Seva Charitable Trust
+      - key: ADMIN_PIN
+        value: admin123
+      - key: ORDER_SECRET_KEY
+        generateValue: true
+      - key: ORDER_EXPIRY_MINUTES
+        value: "20"

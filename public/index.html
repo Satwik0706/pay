@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sri Seva Trust | Secure Direct UPI Payment Portal</title>
+  <meta name="description" content="Direct, tamper-proof UPI payment panel for sacred sevas, poojas, and charitable offerings with instant UTR verification.">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow-top"></div>
+  <div class="bg-glow-bottom"></div>
+
+  <div class="container">
+    <!-- Navbar -->
+    <header class="navbar">
+      <a href="/" class="nav-brand">
+        <div class="brand-icon">🪔</div>
+        <div class="brand-info">
+          <h1 id="merchantNameDisplay">Sri Seva Charitable Trust</h1>
+          <span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 10h2v4h-2zm0 6h2v2h-2z"/></svg> Direct UPI Protocol &bull; Zero Intermediary Fees</span>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <div class="trust-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          256-Bit Encrypted &bull; Option B
+        </div>
+        <a href="/admin" class="admin-link-btn" title="Open Admin Portal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7.5" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          Admin Portal
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-pill">
+        ✨ Sacred Offerings & Devotee Sevas
+      </div>
+      <h2 class="hero-title">Select Your <span>Sacred Seva</span></h2>
+      <p class="hero-subtitle">
+        Offer your prayers and donations securely. Payments transfer directly to the Trust's verified UPI account with full 12-digit UTR tracking.
+      </p>
+
+      <!-- Category Filter -->
+      <div class="filter-bar" id="categoryFilters">
+        <button class="filter-btn active" data-category="ALL">All Sevas</button>
+        <button class="filter-btn" data-category="Daily Seva">Daily Seva</button>
+        <button class="filter-btn" data-category="Special Seva">Special Seva</button>
+        <button class="filter-btn" data-category="Annadanam">Annadanam</button>
+        <button class="filter-btn" data-category="Homa & Yagna">Homa & Yagna</button>
+      </div>
+    </section>
+
+    <!-- Services Grid -->
+    <main>
+      <div class="services-grid" id="servicesGrid">
+        <!-- Rendered dynamically by app.js -->
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-dim);">
+          Loading sacred offerings...
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#howItWorks" onclick="openUtrHelpModal()">How UPI Payment Works</a>
+        <a href="#utrGuide" onclick="openUtrHelpModal()">Where to Find UTR?</a>
+        <a href="/admin">Merchant Verification Portal</a>
+      </div>
+      <p>&copy; 2026 Sri Seva Charitable Trust. Protected by cryptographic HMAC order signatures.</p>
+    </footer>
+  </div>
+
+  <!-- CHECKOUT / PAYMENT MODAL -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Complete Your Seva Offering</h3>
+        <button class="modal-close-btn" id="modalCloseBtn" onclick="closeCheckoutModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Step views rendered dynamically in app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- UTR HELP MODAL -->
+  <div class="modal-overlay" id="utrHelpModal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>Where to Find the 12-Digit UTR?</h3>
+        <button class="modal-close-btn" onclick="closeUtrHelpModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size: 14px; color: var(--text-muted);">
+        <p style="margin-bottom: 16px;">
+          The <strong>UTR (Unique Transaction Reference)</strong> or <strong>UPI Ref ID</strong> is a unique 12-digit number provided by the National Payments Corporation of India (NPCI) for every single UPI transaction.
+        </p>
+
+        <div style="background: rgba(255,255,255,0.04); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+          <h4 style="color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #1a73e8;">🔵</span> Google Pay (GPay)
+          </h4>
+          <p>Tap on the transaction &rarr; Scroll down to <strong>"UPI transaction ID"</strong> (starts with numbers, 12 digits, e.g. 429182910291).</p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.04); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+          <h4 style="color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #5f259f;">🟣</span> PhonePe
+          </h4>
+          <p>Go to Transaction Details &rarr; Look for <strong>"UTR"</strong> under Debited from account details (12 digits).</p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.04); border-radius: 8px; padding: 14px; margin-bottom: 18px;">
+          <h4 style="color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #00baf2;">🔷</span> Paytm
+          </h4>
+          <p>In payment details &rarr; Locate <strong>"UPI Ref No"</strong> or <strong>"Bank Ref No"</strong> (12 digits).</p>
+        </div>
+
+        <button class="btn-submit-utr" onclick="closeUtrHelpModal()" style="padding: 10px;">Got It, Continue Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Logic -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
