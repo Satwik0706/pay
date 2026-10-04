@@ -378,6 +378,7 @@ body {
 .btn-book {
   background: var(--accent-gold-gradient);
   color: #0f172a;
+  text-decoration: none;
   border: none;
   padding: 12px 22px;
   border-radius: var(--radius-md);

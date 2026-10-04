@@ -62,6 +62,10 @@ app.use('/api/orders', orderLimiter, ordersRouter);
 app.use('/api/admin', apiLimiter, adminRouter);
 
 // Clean SPA routing
+app.get('/checkout', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
+});
+
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
